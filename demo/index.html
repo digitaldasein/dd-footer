@@ -1,0 +1,115 @@
+<!--
+SPDX-FileCopyrightText: 2022 Digital Dasein <https://digital-dasein.gitlab.io/>
+SPDX-FileCopyrightText: 2022 Gerben Peeters <gerben@digitaldasein.org>
+SPDX-FileCopyrightText: 2022 Senne Van Baelen <senne@digitaldasein.org>
+
+SPDX-License-Identifier: MIT
+-->
+
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      background: #fafafa;
+    }
+  </style>
+</head>
+<body>
+  <div id="demo"></div>
+
+  <script type="module">
+    import { html, render } from 'lit';
+    import '../dist/src/dd-footer.js';
+
+    render(
+      html`
+      <h1>dd-footer demo</h1>
+      <h2>This example does not include any presentation framework, nor top-level elements</h2>
+
+      <h4>Example 1</h4>
+      <div style="width:1000px; height:600px;position:relative;margin: 0 auto;border:1px solid black;">
+        <p>My Parent</p>
+        <dd-footer text-left="left"
+                   text-center="center"
+                   text-right="right">
+        </dd-footer>
+      </div>
+      <br><br>
+
+      <h4>Example 2</h4>
+      <div style="width:1000px; height:600px;position:relative;margin: 0 auto;border:1px solid black;">
+        <p>My Parent</p>
+        <dd-footer text-left="<b>boldLeft</b>"
+                   img-left="logo.jpeg"
+                   text-center="center"
+                   text-right="right">
+        </dd-footer>
+      </div>
+      <br><br>
+
+      <h4>Example 3</h4>
+      <div style="width:1000px; height:600px;position:relative;margin: 0 auto;border:1px solid black;">
+        <p>My Parent</p>
+        <dd-footer text-left="<b>boldLeft</b>"
+                   img-left="logo.jpeg"
+                   img-right="logo.jpeg"
+                   text-center="A long text for my center would be very long <i>long</i> <b>LONG</b>"
+                   text-right="right"
+                   align-v=bottom>
+        </dd-footer>
+      </div>
+      <br><br>
+
+      <h4>Example 4 - from config</h4>
+      <div style="width:1000px; height:600px;position:relative;margin: 0 auto;border:1px solid black;">
+        <p>Example from config</p>
+        <dd-footer config-path="config.json"
+                   align-v=center>
+        </dd-footer>
+      </div>
+      <br><br>
+
+      <h4>Example 5 - copy into selector</h4>
+      <div>
+        <dd-footer to-selector="section.slide" config-path="config.json"></dd-footer>
+        <section class="slide" style="width:1000px; height:600px;position:relative;margin: 0 auto;border:1px solid black;">
+            <h2>Slide 1</h2>
+        </section>
+        <section class="slide" style="width:1000px; height:600px;position:relative;margin: 0 auto;border:1px solid black;">
+            <h2>Slide 2</h2>
+        </section>
+        <section class="slide" style="width:1000px; height:600px;position:relative;margin: 0 auto;border:1px solid black;">
+            <h2>Slide 3</h2>
+        </section>
+      <br><br>
+
+    <h4>Example 6 - copy from selector</h4>
+      <div class="my-parent-class"
+           footer-text-left="<b>boldLeft</b>"
+           footer-img-left="logo.jpeg"
+           footer-img-right="logo.jpeg"
+           main-title="this is my title"
+           author="svbaelen"
+           date="2022-07-12"
+           footer-text-right="right"
+           footer-align-v=bottom>
+        <dd-footer from-selector=".my-parent-class" to-selector=".new-slide"></dd-footer>
+        <section class="new-slide" style="width:1000px; height:600px;position:relative;margin: 0 auto;border:1px solid black;">
+            <h2>Slide 1</h2>
+        </section>
+        <section class="new-slide" style="width:1000px; height:600px;position:relative;margin: 0 auto;border:1px solid black;">
+            <h2>Slide 2</h2>
+        </section>
+        <section class="new-slide" style="width:1000px; height:600px;position:relative;margin: 0 auto;border:1px solid black;">
+            <h2>Slide 3</h2>
+        </section>
+      <br><br>
+      `,
+
+      document.querySelector('#demo')
+    );
+  </script>
+</body>
+</html>
