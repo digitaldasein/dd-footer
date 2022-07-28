@@ -8,20 +8,22 @@ SPDX-License-Identifier: MIT
 
 # \<dd-footer>
 
-![pipeline](https://gitlab.com/digital-dasein/software/javascript/compono/badges/main/pipeline.svg?job=build_dd_footer&key_text=build)
-![coverage](https://gitlab.com/digital-dasein/software/javascript/compono/badges/main/coverage.svg?job=test_dd_footer)
+[![pipeline](https://gitlab.com/digital-dasein/software/html-presentations/dd-footer/badges/main/pipeline.svg?job=build&key_text=build)](https://gitlab.com/digital-dasein/software/html-presentations/dd-footer/-/pipelines)
+[![coverage](https://gitlab.com/digital-dasein/software/html-presentations/dd-footer/badges/main/coverage.svg?job=test)](https://digital-dasein.gitlab.io/software/html-presentations/dd-footer/lcov-report/)
+[![REUSE 
+status](https://api.reuse.software/badge/gitlab.com/digital-dasein/software/html-presentations/dd-footer)](https://api.reuse.software/info/gitlab.com/digital-dasein/software/html-presentations/dd-footer)
 
 This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) recommendation.
 
 ## Installation
 
 ```bash
-yarn add @compono/dd-footer
+yarn add @digitaldasein/dd-footer
 ```
 or
 
 ```bash
-npm i @compono/dd-footer
+npm i @digitaldasein/dd-footer
 ```
 
 ## Usage
