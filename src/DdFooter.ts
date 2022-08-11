@@ -13,61 +13,149 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 /*---------------------------------------------------------------------*/
 
 const DEFAULT_ATTRIBUTES = {
-  "textLeft" : "",
-  "imgLeft" : "",
-  "imgLeftLink" : "",
-  "textCenter" : "",
-  "imgCenter" : "",
-  "imgCenterLink" : "",
-  "textRight" : "",
-  "imgRight" : "",
-  "imgRightLink" : "",
-  "configPath" : "",
-  "alignVertical": "center",
-  "toSelector" : "dd-slide",
-  "fromSelector" : "dd-slide-collection",
-}
-
+  textLeft: '',
+  imgLeft: '',
+  imgLeftLink: '',
+  textCenter: '',
+  imgCenter: '',
+  imgCenterLink: '',
+  textRight: '',
+  imgRight: '',
+  imgRightLink: '',
+  configPath: '',
+  alignVertical: 'center',
+  toSelector: 'dd-slide',
+  fromSelector: 'dd-slide-collection',
+};
 
 /*---------------------------------------------------------------------*/
 /* Utils                                                               */
 /*---------------------------------------------------------------------*/
 
-async function getJsonConfig (url:string)  {
+async function getJsonConfig(url: string) {
   /* first check head to see if file exists (no need to fetch whole file if
    * when looping over multiple possible filepaths */
-  const _checkFileExists = async (urlCheck:string) => {
-    const response = await fetch(urlCheck, { method: "HEAD" });
-    if ( response.status !== 404 ) {
+  const _checkFileExists = async (urlCheck: string) => {
+    const response = await fetch(urlCheck, { method: 'HEAD' });
+    if (response.status !== 404) {
       return true;
     }
 
     console.error(`JSON config does not exist at '${urlCheck}'`);
     return false;
-  }
+  };
 
   const bFile = await _checkFileExists(url);
 
-  if ( bFile ) {
+  if (bFile) {
     try {
       const response = await fetch(url);
       const json = await response.json();
       return json;
-    }
-    catch (err: any){
-      console.error(`Error while reading config file at ${url} \n\n ${err}`)
+    } catch (err: any) {
+      console.error(`Error while reading config file at ${url} \n\n ${err}`);
     }
   }
 
   return {
-    "error": "Could not parse JSON config, see console for errors"
+    error: 'Could not parse JSON config, see console for errors',
   };
 }
 
+/**
+ * Main class for HTML web component **`dd-footer`**
+ *
+ * For **styling** this component, check out {@link DdFooter.styles |
+ * the styles section}.
+ *
+ * <u>**Important note**</u>: all lit-component properties (interpreted here as
+ * `other properties`) that are documented here have a **corresponding
+ * HTML attribute**. The _non-attribute_ properties are consired private,
+ * and are ingored in the documentation.
+ *
+ * The `dd-footer` element is rendered as a 1x3 grid (3 columns), where each
+ * column has a nested flexbox that contains a HTML (~text) field and a
+ * image field, both optional. It has the following structure:
+ *
+ * ```
+ * | ft-img-left, ft-text-left | ft-img-center, ft-text-center | ft-text-right, ft-img-right |
+ * ```
+ *
+ * (text fields accept HTML markup)
+ *
+ * @example
+ * A simple footer
+ *
+ * ```html
+ * <html>
+ *   [...]
+ *   <dd-footer text-left="<b>boldLeft</b>"
+ *              img-left="logo.jpeg"
+ *              text-center="center"
+ *              text-right="right">
+ *   </dd-footer>
+ *   [...]
+ * </html>
+ * ```
+ *
+ * An interesting feature of `dd-footer` inside the `dd-component`
+ * ecosystem, is that it can inherit relevant attributes from a HTML selector
+ * with the {@link DdFooter.fromSelector | `from-selector` attribute}
+ * (defaults to `dd-slide-collection`). For example to obtain a footer as in
+ * by inheriting from the `dd-slide-collection` element:
+ *
+ * ```html
+ * <html>
+ *   [...]
+ *   <dd-slide-collection main-title="MyTitle"
+ *                        date="2022-07-12"
+ *                        author="Senne Van Baelen"
+ *                        organisation="Digital Dasein"
+ *                        img-src="./assets/img/logo.jpeg"
+ *                        ... (other attr)>
+ *      <dd-footer></dd-footer>
+ *      <!--
+ *      which is the equivalent for:
+ *      <dd-footer from-selector="dd-slide-collection"></dd-footer>
+ *      -->
+ *   </dd-slide-collection>
+ *   [...]
+ * </html>
+ * ```
+ *
+ * Furthermore, say you want one specific footer on each slide or section, without
+ * having to add the HTML element each time, you could assign a `to-selector`
+ * attribute to the footer, which will render the footer in each element that
+ * corresponds to the associated selector (defaults to `dd-slide`), and will
+ * _not_ display the footer where you defined it.
+ *
+ */
 
 export class DdFooter extends LitElement {
-  static styles = css`
+  /**
+   *
+   * To style the `dd-footer` component, use the following **CSS host
+   * variables** (including their default values):
+   *
+   * |  <div style="width:200px">CSS variable</div>   | <div style="width:100px">Default</div>   | Description |
+   * |:-----------------------------------------------|:-----------------------------------------|:------------|
+   * |**`--dd-footer-height`**         |`40px`                           | height of the footer|
+   * |**`--dd-footer-img-height`**     |`var(--dd-footer-height)`        | height of the footer image/logo |
+   * |**`--dd-footer-align-v`**        |`center`                         | vertical alignment of each grid column (1x3) |
+   * |**`--dd-footer-align-flex-v`**   |`center`                         | vertical alignment of the flex items in each column |
+   * |**`--dd-footer-padding-side`**   |`0px`                            | padding on both sides of the footer |
+   * |**`--dd-footer-padding-bottom`** |`0px`                            | padding on the footer bottom |
+   * |**`--dd-footer-padding-text`**   |`0 2px 0 2px`                    | padding on the footer text elements |
+   * |**`--dd-footer-font-size`**      |`16px`                           | footer font-size |
+   * |**`--dd-footer-bottom`**         |`var(--progress-size)`           | bottom margin on footer (defaults to height of progress bar, which if not available, is 0 |
+   * |**`--dd-footer-color-bg`**       |`none`                           | background color of footer |
+   *
+   * The variables can be set anywhere in your HTML context (e.g. in `:root`,
+   * up until the `dd-slide-collection` component itself).
+   *
+   */
 
+  static styles = css`
     :host {
       --footer-height: var(--dd-footer-height, 40px);
       --footer-img-height: var(--dd-footer-img-height, var(--dd-footer-height));
@@ -78,120 +166,211 @@ export class DdFooter extends LitElement {
       --footer-padding-text: var(--dd-footer-padding-text, 0 2px 0 2px);
       --footer-font-size: var(--dd-footer-font-size, 16px);
       --footer-bottom: var(--dd-footer-bottom, var(--progress-size));
-      --footer-bg-color: var(--dd-footer-bg-color);
+      --footer-color-bg: var(--dd-footer-color-bg);
     }
 
     .footer-link {
-      z-index:10;
+      z-index: 10;
     }
 
     .dd-footer {
       width: 100%;
       position: absolute;
       padding-bottom: var(--footer-bottom);
-      bottom:0;
-      left:0;
+      bottom: 0;
+      left: 0;
       display: grid;
-      grid-template-areas:
-        "left center right";
+      grid-template-areas: 'left center right';
       grid-template-columns: 1fr auto 1fr;
-      align-items:var(--footer-align-v);
+      align-items: var(--footer-align-v);
       height: var(--footer-height);
       justify-content: space-between;
-      z-index:10;
+      z-index: 10;
       font-size: var(--footer-font-size);
-      background-color:var(--footer-bg-color);
+      background-color: var(--footer-color-bg);
     }
 
     .dd-footer-item {
-      display:flex;
+      display: flex;
     }
 
     .dd-footer-left {
       grid-area: left;
       padding-left: var(--footer-padding-side);
       padding-bottom: var(--footer-padding-bottom);
-      text-align:left;
-      align-items:center;
+      text-align: left;
+      align-items: center;
     }
 
     .dd-footer-center {
       grid-area: center;
       padding-bottom: var(--footer-padding-bottom);
-      text-align:center;
+      text-align: center;
     }
 
     .dd-footer-right {
       grid-area: right;
       padding-bottom: var(--footer-padding-bottom);
       padding-right: var(--footer-padding-side);
-      text-align:right;
-      justify-content:flex-end;
+      text-align: right;
+      justify-content: flex-end;
     }
 
     .footer-text {
-      align-self:var(--footer-align-flex-v);
-      padding:var(--footer-padding-text);
+      align-self: var(--footer-align-flex-v);
+      padding: var(--footer-padding-text);
     }
 
     img.footer-img {
       height: var(--footer-img-height, var(--footer-height));
-      display:block;
+      display: block;
     }
   `;
 
-  @property( {type:String, attribute: 'text-left' })
+  /**
+   * Footer text left (accepts HTML markup)
+   *
+   * **Corresponding attribute:** `text-left`
+   *
+   * **Default value:** `""` (empty string)
+   */
+  @property({ type: String, attribute: 'text-left' })
   textLeft = DEFAULT_ATTRIBUTES.textLeft;
 
-  @property( {type:String, attribute: 'img-left' })
+  /**
+   * Footer image source left
+   *
+   * **Corresponding attribute:** `img-left`
+   *
+   * **Default value:** `""` (empty string)
+   */
+  @property({ type: String, attribute: 'img-left' })
   imgLeft = DEFAULT_ATTRIBUTES.imgLeft;
 
-  @property( {type:String, attribute: 'img-left-link' })
+  /**
+   * Footer image hyperlink left
+   *
+   * **Corresponding attribute:** `img-left-link`
+   *
+   * **Default value:** `""` (empty string)
+   */
+  @property({ type: String, attribute: 'img-left-link' })
   imgLeftLink = DEFAULT_ATTRIBUTES.imgLeftLink;
 
-  @property( {type:String, attribute: 'text-center' })
+  /**
+   * Footer text center (accepts HTML markup)
+   *
+   * **Corresponding attribute:** `text-center`
+   *
+   * **Default value:** `""` (empty string)
+   */
+  @property({ type: String, attribute: 'text-center' })
   textCenter = DEFAULT_ATTRIBUTES.textCenter;
 
-  @property( {type:String, attribute: 'img-center' })
+  /**
+   * Footer image source center
+   *
+   * **Corresponding attribute:** `img-center`
+   *
+   * **Default value:** `""` (empty string)
+   */
+  @property({ type: String, attribute: 'img-center' })
   imgCenter = DEFAULT_ATTRIBUTES.imgCenter;
 
-  @property( {type:String, attribute: 'img-center-link' })
+  /**
+   * Footer image hyperlink center
+   *
+   * **Corresponding attribute:** `img-center-link`
+   *
+   * **Default value:** `""` (empty string)
+   */
+  @property({ type: String, attribute: 'img-center-link' })
   imgCenterLink = DEFAULT_ATTRIBUTES.imgCenterLink;
 
-  @property( {type:String, attribute: 'text-right' })
+  /**
+   * Footer text right (accepts HTML markup)
+   *
+   * **Corresponding attribute:** `text-right`
+   *
+   * **Default value:** `""` (empty string)
+   */
+  @property({ type: String, attribute: 'text-right' })
   textRight = DEFAULT_ATTRIBUTES.textRight;
 
-  @property( {type:String, attribute: 'img-right' })
+  /**
+   * Footer image source right
+   *
+   * **Corresponding attribute:** `img-right`
+   *
+   * **Default value:** `""` (empty string)
+   */
+  @property({ type: String, attribute: 'img-right' })
   imgRight = DEFAULT_ATTRIBUTES.imgRight;
 
-  @property( {type:String, attribute: 'img-right-link' })
+  /**
+   * Footer image hyperlink right
+   *
+   * **Corresponding attribute:** `img-right-link`
+   *
+   * **Default value:** `""` (empty string)
+   */
+  @property({ type: String, attribute: 'img-right-link' })
   imgRightLink = DEFAULT_ATTRIBUTES.imgRightLink;
 
-  @property( {type:String, attribute: 'config-path' })
+  /**
+   * Path to JSON config file (corresponding inline attributes will
+   * **overwrite** attributes defined in JSON config
+   *
+   * **Corresponding attribute:** `config-path`
+   *
+   * **Default value:** `""` (empty string)
+   */
+  @property({ type: String, attribute: 'config-path' })
   configPath = DEFAULT_ATTRIBUTES.configPath;
 
-  @property( {type:String, attribute: 'align-v' })
+  /**
+   * Vertical alignment of footer content
+   *
+   * **Corresponding attribute:** `align-v`
+   *
+   * **Default value:** `center`
+   */
+  @property({ type: String, attribute: 'align-v' })
   alignVertical = DEFAULT_ATTRIBUTES.alignVertical;
 
-  @property( {type:String, attribute: 'to-selector' })
+  /**
+   * HTML selector on which you want to render (display) the footer.
+   * Setting this value will automatically not display the footer where it is
+   * defined (except when the footer also contains the `to-selector` element).
+   *
+   * **Corresponding attribute:** `to-selector`
+   *
+   * **Default value:** `dd-slide`
+   */
+  @property({ type: String, attribute: 'to-selector' })
   toSelector = DEFAULT_ATTRIBUTES.toSelector;
 
-  @property( {type:String, attribute: 'from-selector' })
+  /**
+   * HTML selector from which you want to inherit relevant attributes.
+   * Setting the same attributes on `dd-footer` itself will overwrite
+   * potentially inherited values.
+   *
+   * **Corresponding attribute:** `from-selector`
+   *
+   * **Default value:** `dd-slide-collection`
+   */
+  @property({ type: String, attribute: 'from-selector' })
   fromSelector = DEFAULT_ATTRIBUTES.fromSelector;
 
-
   /* Make the footer of the page */
-  makeFooter(){
-    let displayImgLeft = "none";
-    let displayImgCenter = "none";
-    let displayImgRight = "none";
+  makeFooter() {
+    let displayImgLeft = 'none';
+    let displayImgCenter = 'none';
+    let displayImgRight = 'none';
 
-    if ( this.imgLeft )
-      displayImgLeft = "inline";
-    if ( this.imgCenter )
-      displayImgCenter = "inline";
-    if ( this.imgRight )
-      displayImgRight = "inline";
+    if (this.imgLeft) displayImgLeft = 'inline';
+    if (this.imgCenter) displayImgCenter = 'inline';
+    if (this.imgRight) displayImgRight = 'inline';
 
     return `
       <div class="dd-footer">
@@ -225,44 +404,38 @@ export class DdFooter extends LitElement {
     `;
   }
 
-  async setPropsFromJson(){
+  async setPropsFromJson() {
     const jsonObj = await getJsonConfig(this.configPath);
-    if ( jsonObj.error )
-        this.textCenter = `<i><b>[ERROR]</b>${jsonObj.error} </i>`;
+    if (jsonObj.error)
+      this.textCenter = `<i><b>[ERROR]</b>${jsonObj.error} </i>`;
     else {
-      if ( !this.textCenter ){
-        if ( jsonObj.title )
-          this.textCenter = `<b>${jsonObj.title}</b>`;
-        if ( jsonObj.mainTitle )
-          this.textCenter = `<b>${jsonObj.mainTitle}</b>`;
+      if (!this.textCenter) {
+        if (jsonObj.title) this.textCenter = `<b>${jsonObj.title}</b>`;
+        if (jsonObj.mainTitle) this.textCenter = `<b>${jsonObj.mainTitle}</b>`;
         // if ( jsonObj.subTitle )
         //  this.subTitle = jsonObj.subTitle
-        if ( jsonObj.author )
+        if (jsonObj.author)
           this.textCenter += ` &ndash; <i>${jsonObj.author}</i>`;
-        if ( jsonObj.date )
-          this.textCenter += ` &ndash; ${jsonObj.date}`;
+        if (jsonObj.date) this.textCenter += ` &ndash; ${jsonObj.date}`;
       }
       // if ( jsonObj.url )
       //  this.url = jsonObj.url
-      if ( jsonObj.urlLogo && !this.imgLeftLink )
-        this.imgLeftLink = jsonObj.urlLogo
-      if ( jsonObj.imgSrc && !this.imgLeft )
-        this.imgLeft = jsonObj.imgSrc
+      if (jsonObj.urlLogo && !this.imgLeftLink)
+        this.imgLeftLink = jsonObj.urlLogo;
+      if (jsonObj.imgSrc && !this.imgLeft) this.imgLeft = jsonObj.imgSrc;
       // if ( jsonObj.organisation )
       //  this.organisation = jsonObj.organisation
     }
   }
 
-  setVerticalAlignment(elem:HTMLElement){
-    if ( this.alignVertical === "center" ){
+  setVerticalAlignment(elem: HTMLElement) {
+    if (this.alignVertical === 'center') {
       elem.style.setProperty('--footer-align-v', 'center');
       elem.style.setProperty('--footer-align-flex-v', 'center');
-    }
-    else if ( this.alignVertical === "top" ){
+    } else if (this.alignVertical === 'top') {
       elem.style.setProperty('--footer-align-v', 'start');
       elem.style.setProperty('--footer-align-flex-v', 'flex-start');
-    }
-    else if ( this.alignVertical === "bottom" ){
+    } else if (this.alignVertical === 'bottom') {
       elem.style.setProperty('--footer-align-v', 'end');
       elem.style.setProperty('--footer-align-flex-v', 'flex-end');
     }
@@ -273,82 +446,100 @@ export class DdFooter extends LitElement {
   private _injectIntoSelector = () => {
     const injectElements = document.querySelectorAll(this.toSelector);
 
-    if ( injectElements.length > 0 ){
-      this.style.display = "none";
+    if (injectElements.length > 0) {
+      this.style.display = 'none';
     } else return;
 
-    for ( const elem of injectElements ) {
+    for (const elem of injectElements) {
       const newFooterElem = document.createElement('dd-footer');
-      newFooterElem.setAttribute("text-left", this.textLeft);
-      newFooterElem.setAttribute("img-left", this.imgLeft);
-      newFooterElem.setAttribute("img-left-link", this.imgLeftLink);
-      newFooterElem.setAttribute("text-center", this.textCenter);
-      newFooterElem.setAttribute("img-center", this.imgCenter);
-      newFooterElem.setAttribute("img-center-link", this.imgCenterLink);
-      newFooterElem.setAttribute("text-right", this.textRight);
-      newFooterElem.setAttribute("img-right", this.imgRight);
-      newFooterElem.setAttribute("img-right-link", this.imgRightLink);
-      newFooterElem.setAttribute("align-v", this.alignVertical);
-      newFooterElem.setAttribute("config-path", this.configPath);
-      newFooterElem.setAttribute("to-selector", "");
-      newFooterElem.setAttribute("from-selector", "");
+      newFooterElem.setAttribute('text-left', this.textLeft);
+      newFooterElem.setAttribute('img-left', this.imgLeft);
+      newFooterElem.setAttribute('img-left-link', this.imgLeftLink);
+      newFooterElem.setAttribute('text-center', this.textCenter);
+      newFooterElem.setAttribute('img-center', this.imgCenter);
+      newFooterElem.setAttribute('img-center-link', this.imgCenterLink);
+      newFooterElem.setAttribute('text-right', this.textRight);
+      newFooterElem.setAttribute('img-right', this.imgRight);
+      newFooterElem.setAttribute('img-right-link', this.imgRightLink);
+      newFooterElem.setAttribute('align-v', this.alignVertical);
+      newFooterElem.setAttribute('config-path', this.configPath);
+      newFooterElem.setAttribute('to-selector', '');
+      newFooterElem.setAttribute('from-selector', '');
 
       this.setVerticalAlignment(newFooterElem);
 
       elem.append(newFooterElem);
-    };
-  }
+    }
+  };
 
   private _injectFromSelector = () => {
     const injectFromElem = document.querySelector(this.fromSelector);
 
-    if ( !injectFromElem )
-      return
+    if (!injectFromElem) return;
 
     // relevant dd-slide-collection attributes
-    if ( injectFromElem!.getAttribute('main-title') )
+    if (injectFromElem!.getAttribute('main-title'))
       this.textCenter = `<b>${injectFromElem!.getAttribute('main-title')}</b>`;
 
-    if ( injectFromElem!.getAttribute('author') )
-      this.textCenter += ` &ndash; <i>${injectFromElem!.getAttribute('author')}</i>`;
+    if (injectFromElem!.getAttribute('author'))
+      this.textCenter += ` &ndash; <i>${injectFromElem!.getAttribute(
+        'author'
+      )}</i>`;
 
-    if ( injectFromElem!.getAttribute('date') )
-      this.textCenter += ` &ndash; ${injectFromElem!.getAttribute('date') }`;
+    if (injectFromElem!.getAttribute('date'))
+      this.textCenter += ` &ndash; ${injectFromElem!.getAttribute('date')}`;
 
-    if ( injectFromElem!.getAttribute('url-logo') )
+    if (injectFromElem!.getAttribute('url-logo'))
       this.imgLeftLink = injectFromElem!.getAttribute('url-logo') as string;
 
-    if ( injectFromElem!.getAttribute('img-src') )
+    if (injectFromElem!.getAttribute('img-src'))
       this.imgLeft = injectFromElem!.getAttribute('img-src') as string;
 
     // additional options (with priority)
-    if ( injectFromElem!.getAttribute('footer-text-left') )
-      this.textLeft = injectFromElem!.getAttribute('footer-text-left') as string;
-    if ( injectFromElem!.getAttribute('footer-img-left') )
+    if (injectFromElem!.getAttribute('footer-text-left'))
+      this.textLeft = injectFromElem!.getAttribute(
+        'footer-text-left'
+      ) as string;
+    if (injectFromElem!.getAttribute('footer-img-left'))
       this.imgLeft = injectFromElem!.getAttribute('footer-img-left') as string;
-    if ( injectFromElem!.getAttribute('footer-img-left-link') )
-      this.imgLeftLink = injectFromElem!.getAttribute('footer-img-left-link') as string;
-    if ( injectFromElem!.getAttribute('footer-text-center') )
-      this.textCenter = injectFromElem!.getAttribute('footer-text-center') as string;
-    if ( injectFromElem!.getAttribute('footer-img-center') )
-      this.imgCenter = injectFromElem!.getAttribute('footer-img-center') as string;
-    if ( injectFromElem!.getAttribute('footer-img-center-link') )
-      this.imgCenterLink = injectFromElem!.getAttribute('footer-img-center-link') as string;
-    if ( injectFromElem!.getAttribute('footer-text-right') )
-      this.textRight = injectFromElem!.getAttribute('footer-text-right') as string;
-    if ( injectFromElem!.getAttribute('footer-img-right') )
-      this.imgRight = injectFromElem!.getAttribute('footer-img-right') as string;
-    if ( injectFromElem!.getAttribute('footer-img-right-link') )
-      this.imgRightLink = injectFromElem!.getAttribute('footer-img-right-link') as string;
-    if ( injectFromElem!.getAttribute('footer-align-v') )
-      this.alignVertical = injectFromElem!.getAttribute('footer-align-v') as string;
-  }
-
+    if (injectFromElem!.getAttribute('footer-img-left-link'))
+      this.imgLeftLink = injectFromElem!.getAttribute(
+        'footer-img-left-link'
+      ) as string;
+    if (injectFromElem!.getAttribute('footer-text-center'))
+      this.textCenter = injectFromElem!.getAttribute(
+        'footer-text-center'
+      ) as string;
+    if (injectFromElem!.getAttribute('footer-img-center'))
+      this.imgCenter = injectFromElem!.getAttribute(
+        'footer-img-center'
+      ) as string;
+    if (injectFromElem!.getAttribute('footer-img-center-link'))
+      this.imgCenterLink = injectFromElem!.getAttribute(
+        'footer-img-center-link'
+      ) as string;
+    if (injectFromElem!.getAttribute('footer-text-right'))
+      this.textRight = injectFromElem!.getAttribute(
+        'footer-text-right'
+      ) as string;
+    if (injectFromElem!.getAttribute('footer-img-right'))
+      this.imgRight = injectFromElem!.getAttribute(
+        'footer-img-right'
+      ) as string;
+    if (injectFromElem!.getAttribute('footer-img-right-link'))
+      this.imgRightLink = injectFromElem!.getAttribute(
+        'footer-img-right-link'
+      ) as string;
+    if (injectFromElem!.getAttribute('footer-align-v'))
+      this.alignVertical = injectFromElem!.getAttribute(
+        'footer-align-v'
+      ) as string;
+  };
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener("DOMContentLoaded", this._injectFromSelector );
-    document.addEventListener("DOMContentLoaded", this._injectIntoSelector );
+    document.addEventListener('DOMContentLoaded', this._injectFromSelector);
+    document.addEventListener('DOMContentLoaded', this._injectIntoSelector);
   }
 
   disconnectedCallback() {
@@ -357,24 +548,21 @@ export class DdFooter extends LitElement {
     super.disconnectedCallback();
   }
 
-  render( ) {
-
-    let htmlContent = "";
+  render() {
+    let htmlContent = '';
 
     this.setVerticalAlignment(this);
 
-    if ( this.configPath )
-      this.setPropsFromJson();
+    if (this.configPath) this.setPropsFromJson();
 
     htmlContent += this.makeFooter();
 
     return html`${unsafeHTML(htmlContent)}`;
   }
-
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "dd-footer": DdFooter,
+    'dd-footer': DdFooter;
   }
 }

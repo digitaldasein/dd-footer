@@ -28,12 +28,25 @@ npm i @digitaldasein/dd-footer
 
 ## Usage
 
+As a module:
+
 ```html
 <script type="module">
   import 'path/to/dd-footer.js';
 </script>
 
-<dd-footer></dd-footer>
+<dd-footer>...</dd-footer>
+```
+
+For a production-ready build, either integrated into a library or standalone, 
+check out the
+[libcompono](https://gitlab.com/digital-dasein/software/html-presentations/libcompono) 
+library.
+
+## Docs
+
+&rarr; [go to 
+docs](https://digital-dasein.gitlab.io/software/html-presentations/dd-footer/docs/classes/DdFooter.html)
 ```
 
 ## Local Demo with `web-dev-server`
@@ -72,6 +85,9 @@ To run the tests in interactive watch mode run:
 ```bash
 yarn test:watch
 ```
+
+Test results are available 
+[here](https://digital-dasein.gitlab.io/software/html-presentations/dd-footer/lcov-report/).
 
 
 ## Tooling configs
