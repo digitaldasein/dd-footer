@@ -139,12 +139,12 @@ export class DdFooter extends LitElement {
    *
    * |  <div style="width:200px">CSS variable</div>   | <div style="width:100px">Default</div>   | Description |
    * |:-----------------------------------------------|:-----------------------------------------|:------------|
-   * |**`--dd-footer-height`**         |`40px`                           | height of the footer|
+   * |**`--dd-footer-height`**         |`30px`                           | height of the footer|
    * |**`--dd-footer-img-height`**     |`var(--dd-footer-height)`        | height of the footer image/logo |
    * |**`--dd-footer-padding-side`**   |`0px`                            | padding on both sides of the footer |
    * |**`--dd-footer-padding-bottom`** |`0px`                            | padding on the footer bottom |
    * |**`--dd-footer-padding-text`**   |`0 2px 0 2px`                    | padding on the footer text elements |
-   * |**`--dd-footer-font-size`**      |`16px`                           | footer font-size |
+   * |**`--dd-footer-font-size`**      |`14px`                           | footer font-size |
    * |**`--dd-footer-bottom`**         |`var(--progress-size, 0em)`      | bottom margin on footer (defaults to height of progress bar, which if not available, is 0 |
    * |**`--dd-footer-color-bg`**       |`none`                           | background color of footer |
    *
@@ -155,14 +155,14 @@ export class DdFooter extends LitElement {
 
   static styles = css`
     :host {
-      --footer-height: var(--dd-footer-height, 40px);
+      --footer-height: var(--dd-footer-height, 30px);
       --footer-img-height: var(--dd-footer-img-height, var(--dd-footer-height));
       --footer-align-v: var(--dd-footer-align-v, center);
       --footer-align-flex-v: var(--dd-footer-align-flex-v, center);
       --footer-padding-side: var(--dd-footer-padding-side, 0px);
       --footer-padding-bottom: var(--dd-footer-padding-bottom, 0px);
       --footer-padding-text: var(--dd-footer-padding-text, 0 2px 0 2px);
-      --footer-font-size: var(--dd-footer-font-size, 16px);
+      --footer-font-size: var(--dd-footer-font-size, 14px);
       --footer-bottom: var(--dd-footer-bottom, var(--progress-size));
       --footer-color-bg: var(--dd-footer-color-bg);
     }
