@@ -328,7 +328,7 @@ export class DdFooter extends LitElement {
 
   /**
    * Vertical alignment of footer content.
-   * Choose from [center, top, bottom]
+   * Choose from {center, top, bottom}
    *
    * **Corresponding attribute:** `align-v`
    *
@@ -477,16 +477,20 @@ export class DdFooter extends LitElement {
     if (!injectFromElem) return;
 
     // relevant dd-slide-collection attributes
-    if (injectFromElem!.getAttribute('main-title') && !this.textCenter)
-      this.textCenter = `<b>${injectFromElem!.getAttribute('main-title')}</b>`;
+    if (!this.textCenter) {
+      if (injectFromElem!.getAttribute('main-title'))
+        this.textCenter = `<b>${injectFromElem!.getAttribute(
+          'main-title'
+        )}</b>`;
 
-    if (injectFromElem!.getAttribute('author') && !this.textCenter)
-      this.textCenter += ` &ndash; <i>${injectFromElem!.getAttribute(
-        'author'
-      )}</i>`;
+      if (injectFromElem!.getAttribute('author'))
+        this.textCenter += ` &ndash; <i>${injectFromElem!.getAttribute(
+          'author'
+        )}</i>`;
 
-    if (injectFromElem!.getAttribute('date') && !this.textCenter)
-      this.textCenter += ` &ndash; ${injectFromElem!.getAttribute('date')}`;
+      if (injectFromElem!.getAttribute('date'))
+        this.textCenter += ` &ndash; ${injectFromElem!.getAttribute('date')}`;
+    }
 
     if (injectFromElem!.getAttribute('url-logo') && !this.imgLeftLink)
       this.imgLeftLink = injectFromElem!.getAttribute('url-logo') as string;
