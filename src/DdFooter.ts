@@ -145,7 +145,7 @@ export class DdFooter extends LitElement {
    * |**`--dd-footer-padding-bottom`** |`0px`                            | padding on the footer bottom |
    * |**`--dd-footer-padding-text`**   |`0 2px 0 2px`                    | padding on the footer text elements |
    * |**`--dd-footer-font-size`**      |`16px`                           | footer font-size |
-   * |**`--dd-footer-bottom`**         |`var(--progress-size)`           | bottom margin on footer (defaults to height of progress bar, which if not available, is 0 |
+   * |**`--dd-footer-bottom`**         |`var(--progress-size, 0em)`      | bottom margin on footer (defaults to height of progress bar, which if not available, is 0 |
    * |**`--dd-footer-color-bg`**       |`none`                           | background color of footer |
    *
    * The variables can be set anywhere in your HTML context (e.g. in `:root`,
