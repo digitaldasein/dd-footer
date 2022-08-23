@@ -87,15 +87,13 @@ SPDX-License-Identifier: MIT
 
     <h4>Example 6 - copy from selector</h4>
       <div class="my-parent-class"
-           footer-text-left="<b>boldLeft</b>"
-           footer-img-left="logo.jpeg"
-           footer-img-right="logo.jpeg"
+           img-src="logo.jpeg"
            main-title="this is my title"
            author="svbaelen"
            date="2022-07-12"
            footer-text-right="right"
            footer-align-v=bottom>
-        <dd-footer from-selector=".my-parent-class" to-selector=".new-slide"></dd-footer>
+        <dd-footer from-selector=".my-parent-class" to-selector=".new-slide" img-left=""></dd-footer>
         <section class="new-slide" style="width:1000px; height:600px;position:relative;margin: 0 auto;border:1px solid black;">
             <h2>Slide 1</h2>
         </section>

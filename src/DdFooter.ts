@@ -477,7 +477,7 @@ export class DdFooter extends LitElement {
     if (!injectFromElem) return;
 
     // relevant dd-slide-collection attributes
-    if (!this.textCenter) {
+    if (this.getAttribute('text-center') == null) {
       if (injectFromElem!.getAttribute('main-title'))
         this.textCenter = `<b>${injectFromElem!.getAttribute(
           'main-title'
@@ -492,10 +492,16 @@ export class DdFooter extends LitElement {
         this.textCenter += ` &ndash; ${injectFromElem!.getAttribute('date')}`;
     }
 
-    if (injectFromElem!.getAttribute('url-logo') && !this.imgLeftLink)
+    if (
+      injectFromElem!.getAttribute('url-logo') &&
+      this.getAttribute('img-left-link') == null
+    )
       this.imgLeftLink = injectFromElem!.getAttribute('url-logo') as string;
 
-    if (injectFromElem!.getAttribute('img-src') && !this.imgLeft)
+    if (
+      injectFromElem!.getAttribute('img-src') &&
+      this.getAttribute('img-left') == null
+    )
       this.imgLeft = injectFromElem!.getAttribute('img-src') as string;
   };
 
