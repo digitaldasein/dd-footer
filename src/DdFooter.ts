@@ -141,8 +141,6 @@ export class DdFooter extends LitElement {
    * |:-----------------------------------------------|:-----------------------------------------|:------------|
    * |**`--dd-footer-height`**         |`40px`                           | height of the footer|
    * |**`--dd-footer-img-height`**     |`var(--dd-footer-height)`        | height of the footer image/logo |
-   * |**`--dd-footer-align-v`**        |`center`                         | vertical alignment of each grid column (1x3) |
-   * |**`--dd-footer-align-flex-v`**   |`center`                         | vertical alignment of the flex items in each column |
    * |**`--dd-footer-padding-side`**   |`0px`                            | padding on both sides of the footer |
    * |**`--dd-footer-padding-bottom`** |`0px`                            | padding on the footer bottom |
    * |**`--dd-footer-padding-text`**   |`0 2px 0 2px`                    | padding on the footer text elements |
@@ -329,7 +327,8 @@ export class DdFooter extends LitElement {
   configPath = DEFAULT_ATTRIBUTES.configPath;
 
   /**
-   * Vertical alignment of footer content
+   * Vertical alignment of footer content.
+   * Choose from [center, top, bottom]
    *
    * **Corresponding attribute:** `align-v`
    *
@@ -478,62 +477,22 @@ export class DdFooter extends LitElement {
     if (!injectFromElem) return;
 
     // relevant dd-slide-collection attributes
-    if (injectFromElem!.getAttribute('main-title'))
+    if (injectFromElem!.getAttribute('main-title') && !this.textCenter)
       this.textCenter = `<b>${injectFromElem!.getAttribute('main-title')}</b>`;
 
-    if (injectFromElem!.getAttribute('author'))
+    if (injectFromElem!.getAttribute('author') && !this.textCenter)
       this.textCenter += ` &ndash; <i>${injectFromElem!.getAttribute(
         'author'
       )}</i>`;
 
-    if (injectFromElem!.getAttribute('date'))
+    if (injectFromElem!.getAttribute('date') && !this.textCenter)
       this.textCenter += ` &ndash; ${injectFromElem!.getAttribute('date')}`;
 
-    if (injectFromElem!.getAttribute('url-logo'))
+    if (injectFromElem!.getAttribute('url-logo') && !this.imgLeftLink)
       this.imgLeftLink = injectFromElem!.getAttribute('url-logo') as string;
 
-    if (injectFromElem!.getAttribute('img-src'))
+    if (injectFromElem!.getAttribute('img-src') && !this.imgLeft)
       this.imgLeft = injectFromElem!.getAttribute('img-src') as string;
-
-    // additional options (with priority)
-    if (injectFromElem!.getAttribute('footer-text-left'))
-      this.textLeft = injectFromElem!.getAttribute(
-        'footer-text-left'
-      ) as string;
-    if (injectFromElem!.getAttribute('footer-img-left'))
-      this.imgLeft = injectFromElem!.getAttribute('footer-img-left') as string;
-    if (injectFromElem!.getAttribute('footer-img-left-link'))
-      this.imgLeftLink = injectFromElem!.getAttribute(
-        'footer-img-left-link'
-      ) as string;
-    if (injectFromElem!.getAttribute('footer-text-center'))
-      this.textCenter = injectFromElem!.getAttribute(
-        'footer-text-center'
-      ) as string;
-    if (injectFromElem!.getAttribute('footer-img-center'))
-      this.imgCenter = injectFromElem!.getAttribute(
-        'footer-img-center'
-      ) as string;
-    if (injectFromElem!.getAttribute('footer-img-center-link'))
-      this.imgCenterLink = injectFromElem!.getAttribute(
-        'footer-img-center-link'
-      ) as string;
-    if (injectFromElem!.getAttribute('footer-text-right'))
-      this.textRight = injectFromElem!.getAttribute(
-        'footer-text-right'
-      ) as string;
-    if (injectFromElem!.getAttribute('footer-img-right'))
-      this.imgRight = injectFromElem!.getAttribute(
-        'footer-img-right'
-      ) as string;
-    if (injectFromElem!.getAttribute('footer-img-right-link'))
-      this.imgRightLink = injectFromElem!.getAttribute(
-        'footer-img-right-link'
-      ) as string;
-    if (injectFromElem!.getAttribute('footer-align-v'))
-      this.alignVertical = injectFromElem!.getAttribute(
-        'footer-align-v'
-      ) as string;
   };
 
   connectedCallback() {
