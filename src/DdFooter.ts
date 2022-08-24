@@ -145,7 +145,7 @@ export class DdFooter extends LitElement {
    * |**`--dd-footer-padding-bottom`** |`0px`                            | padding on the footer bottom |
    * |**`--dd-footer-padding-text`**   |`0 2px 0 2px`                    | padding on the footer text elements |
    * |**`--dd-footer-font-size`**      |`14px`                           | footer font-size |
-   * |**`--dd-footer-bottom`**         |`0`                              | bottom margin on footer  |
+   * |**`--dd-footer-bottom`**         |`var(--progress-height, 0em)`    | bottom margin on footer (defaults to height of progress bar, which if not available, is 0 |
    * |**`--dd-footer-color-bg`**       |`none`                           | background color of footer |
    *
    * The variables can be set anywhere in your HTML context (e.g. in `:root`,
@@ -163,7 +163,7 @@ export class DdFooter extends LitElement {
       --footer-padding-bottom: var(--dd-footer-padding-bottom, 0px);
       --footer-padding-text: var(--dd-footer-padding-text, 0 2px 0 2px);
       --footer-font-size: var(--dd-footer-font-size, 14px);
-      --footer-bottom: var(--dd-footer-bottom);
+      --footer-bottom: var(--dd-footer-bottom, var(--progress-height));
       --footer-color-bg: var(--dd-footer-color-bg);
     }
 
@@ -186,7 +186,6 @@ export class DdFooter extends LitElement {
       z-index: 10;
       font-size: var(--footer-font-size);
       background-color: var(--footer-color-bg);
-      line-height: normal;
     }
 
     .dd-footer-item {
