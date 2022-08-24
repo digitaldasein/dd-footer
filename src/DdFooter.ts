@@ -441,8 +441,12 @@ export class DdFooter extends LitElement {
   }
 
   /* tricky to test DOMContentLoaded stuff */
-  /* c8 ignore next 75 */
+  /* c8 ignore next 80 */
   private _injectIntoSelector = () => {
+    // no injection if footer inside dd-slide
+    if (this.parentElement?.nodeName === 'DD-SLIDE') return;
+    if (this.parentElement?.nodeName === 'SECTION') return;
+
     const injectElements = document.querySelectorAll(this.toSelector);
 
     if (injectElements.length > 0) {
@@ -472,6 +476,10 @@ export class DdFooter extends LitElement {
   };
 
   private _injectFromSelector = () => {
+    // no injection if footer inside dd-slide
+    if (this.parentElement?.nodeName === 'DD-SLIDE') return;
+    if (this.parentElement?.nodeName === 'SECTION') return;
+
     const injectFromElem = document.querySelector(this.fromSelector);
 
     if (!injectFromElem) return;
