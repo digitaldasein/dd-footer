@@ -454,24 +454,28 @@ export class DdFooter extends LitElement {
     } else return;
 
     for (const elem of injectElements) {
-      const newFooterElem = document.createElement('dd-footer');
-      newFooterElem.setAttribute('text-left', this.textLeft);
-      newFooterElem.setAttribute('img-left', this.imgLeft);
-      newFooterElem.setAttribute('img-left-link', this.imgLeftLink);
-      newFooterElem.setAttribute('text-center', this.textCenter);
-      newFooterElem.setAttribute('img-center', this.imgCenter);
-      newFooterElem.setAttribute('img-center-link', this.imgCenterLink);
-      newFooterElem.setAttribute('text-right', this.textRight);
-      newFooterElem.setAttribute('img-right', this.imgRight);
-      newFooterElem.setAttribute('img-right-link', this.imgRightLink);
-      newFooterElem.setAttribute('align-v', this.alignVertical);
-      newFooterElem.setAttribute('config-path', this.configPath);
-      newFooterElem.setAttribute('to-selector', '');
-      newFooterElem.setAttribute('from-selector', '');
+      if (elem.querySelector('dd-footer')) {
+        // currenly do nothing
+      } else {
+        const newFooterElem = document.createElement('dd-footer');
+        newFooterElem.setAttribute('text-left', this.textLeft);
+        newFooterElem.setAttribute('img-left', this.imgLeft);
+        newFooterElem.setAttribute('img-left-link', this.imgLeftLink);
+        newFooterElem.setAttribute('text-center', this.textCenter);
+        newFooterElem.setAttribute('img-center', this.imgCenter);
+        newFooterElem.setAttribute('img-center-link', this.imgCenterLink);
+        newFooterElem.setAttribute('text-right', this.textRight);
+        newFooterElem.setAttribute('img-right', this.imgRight);
+        newFooterElem.setAttribute('img-right-link', this.imgRightLink);
+        newFooterElem.setAttribute('align-v', this.alignVertical);
+        newFooterElem.setAttribute('config-path', this.configPath);
+        newFooterElem.setAttribute('to-selector', '');
+        newFooterElem.setAttribute('from-selector', '');
 
-      this.setVerticalAlignment(newFooterElem);
+        this.setVerticalAlignment(newFooterElem);
 
-      elem.append(newFooterElem);
+        elem.append(newFooterElem);
+      }
     }
   };
 
