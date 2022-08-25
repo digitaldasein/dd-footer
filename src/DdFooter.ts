@@ -186,6 +186,7 @@ export class DdFooter extends LitElement {
       z-index: 10;
       font-size: var(--footer-font-size);
       background-color: var(--footer-color-bg);
+      line-height: normal;
     }
 
     .dd-footer-item {
